@@ -4,6 +4,8 @@ pygame.init()
 
 screen = pygame.display.set_mode((800,400))
 pygame.display.set_caption("Runner")
+# Pour les FPS
+clock = pygame.time.Clock()
 
 while True:
     for event in pygame.event.get():
@@ -13,3 +15,5 @@ while True:
 
 
     pygame.display.update()
+    # MAX 60 image par seconde
+    clock.tick(60)
