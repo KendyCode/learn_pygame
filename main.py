@@ -13,9 +13,12 @@ ground_surface = pygame.image.load("graphics/ground.png").convert()
 #Antialisa en False puisque on va faire du pixel art sinon cest mieux de le mettre en True dans les autres cas
 text_surface = test_font.render("My game", False, "Black")
 
-snail_surface = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
-snail_x_pos = 600
+snail_surf = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
+snail_rect = snail_surf.get_rect(midbottom=(600,300))
 
+
+player_surf = pygame.image.load("graphics/player/player_walk_1.png").convert_alpha()
+player_rect = player_surf.get_rect(midbottom=(80,300))
 # Pour que la fenetre reste ouverte
 while True:
 
@@ -30,11 +33,15 @@ while True:
     screen.blit(sky_surface,(0,0))
     screen.blit(ground_surface,(0,300))
     screen.blit(text_surface,(300,50))
-    snail_x_pos -= 4
-    print(snail_x_pos)
-    if snail_x_pos < -100:
-        snail_x_pos = 800
-    screen.blit(snail_surface,(snail_x_pos,250))
+
+    snail_rect.x -= 4
+    if snail_rect.right <= 0:
+        snail_rect.left = 800
+
+    print(snail_rect.right)
+
+    screen.blit(snail_surf,snail_rect)
+    screen.blit(player_surf,player_rect)
 
 
 
