@@ -28,11 +28,17 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        if event.type == pygame.MOUSEBUTTONUP:
-            print("mouse up")
-        if event.type == pygame.MOUSEMOTION:
-            if player_rect.collidepoint(event.pos):
-                print("Collision")
+        # if event.type == pygame.MOUSEMOTION:
+        #     if player_rect.collidepoint(event.pos):
+        #         print("Collision")
+        if event.type == pygame.KEYDOWN:
+            print("key down")
+        if event.type == pygame.KEYUP:
+            print("key up")
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                print("jump")
+
 
 
     # Pour mettre une surface sur une autre surface
@@ -52,6 +58,10 @@ while True:
 
     screen.blit(snail_surf,snail_rect)
     screen.blit(player_surf,player_rect)
+
+    # keys = pygame.key.get_pressed()
+    # if keys[pygame.K_SPACE]:
+    #     print("jump")
 
     # if player_rect.colliderect(snail_rect):
     #     print("Collision")
