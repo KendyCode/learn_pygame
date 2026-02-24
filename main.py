@@ -41,12 +41,8 @@ while True:
     screen.blit(ground_surface,(0,300))
     pygame.draw.rect(screen,"Pink", score_rect)
     pygame.draw.rect(screen,"Pink", score_rect,10)
-
-    # Pour dessiner une ligne
-    # pygame.draw.line(screen,"Gold", (0,0),(800,400),10)
-    # Pour dessiner une ligne qui suit la position de la souris
-    # pygame.draw.line(screen,"Gold", (0,0),pygame.mouse.get_pos(),10)
-
+    # Dessiner un cerlce
+    pygame.draw.ellipse(screen,"Brown",pygame.Rect(50,200,100,100))
     screen.blit(score_surf,score_rect)
 
     snail_rect.x -= 4
