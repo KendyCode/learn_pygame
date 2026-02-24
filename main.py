@@ -7,9 +7,8 @@ pygame.display.set_caption("Runner")
 # Pour les FPS
 clock = pygame.time.Clock()
 
-test_surface = pygame.Surface((100,200))
-test_surface.fill("Red")
-
+sky_surface = pygame.image.load("graphics/Sky.png")
+ground_surface = pygame.image.load("graphics/ground.png")
 # Pour que la fenetre reste ouverte
 while True:
 
@@ -20,7 +19,10 @@ while True:
             exit()
 
     # Pour mettre une surface sur une autre surface
-    screen.blit(test_surface,(200,100))
+
+    screen.blit(sky_surface,(0,0))
+    screen.blit(ground_surface,(0,250))
+
 
 
     pygame.display.update()
