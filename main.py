@@ -1,5 +1,6 @@
 import pygame
 from sys import exit
+from random import randint
 
 
 def display_score():
@@ -8,6 +9,30 @@ def display_score():
     score_rect = score_surf.get_rect(center=(400,50))
     screen.blit(score_surf,score_rect)
     return current_time
+
+def obstacle_mouvement(obstacle_list):
+    if obstacle_list:
+        for obstacle_rect in obstacle_list:
+            obstacle_rect.x -= 5
+
+            if obstacle_rect.bottom == 300:
+                screen.blit(snail_surf,obstacle_rect)
+            else:
+                screen.blit(fly_surf,obstacle_rect)
+
+        obstacle_list = [obstacle for obstacle in obstacle_list if obstacle.x > -100]
+
+
+
+        return obstacle_list
+    # Car on ne peut pas faire un append avec un None (au debut la liste est vide)
+    else: return []
+
+def collisions(player,obstacles):
+    if obstacles:
+        for obstacle_rect in obstacles:
+            if player.colliderect(obstacle_rect): return False
+    return True
 
 pygame.init()
 screen = pygame.display.set_mode((800,400))
@@ -26,9 +51,13 @@ ground_surface = pygame.image.load("graphics/ground.png").convert()
 # score_surf = test_font.render("My game", False, (64,64,64))
 # score_rect = score_surf.get_rect(center=(400,50))
 
+# Obstacles
 snail_surf = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
-snail_rect = snail_surf.get_rect(midbottom=(600,300))
 
+
+fly_surf = pygame.image.load("graphics/fly/fly1.png").convert_alpha()
+
+obstacle_rect_list = []
 
 player_surf = pygame.image.load("graphics/player/player_walk_1.png").convert_alpha()
 player_rect = player_surf.get_rect(midbottom=(80,300))
@@ -45,8 +74,9 @@ game_title_rect = game_title.get_rect(center=(400,80))
 game_message = test_font.render("Press space to start", False, (111,196,169))
 game_message_rect = game_message.get_rect(center=(400,320))
 
-
-
+# Timer
+obstacle_timer = pygame.USEREVENT + 1 # +1 Puisque Pygame resout lui meme des events par lui meme et pour eviter les conflits on ajoute +1 a chaque event qu'on va add
+pygame.time.set_timer(obstacle_timer, 1500)
 # Pour que la fenetre reste ouverte
 while True:
 
@@ -65,8 +95,15 @@ while True:
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
-                snail_rect.left = 800
+
                 start_time = int(pygame.time.get_ticks() / 1000)
+        # IT would have been better to place the code in the if game_active statement above...
+        if event.type == obstacle_timer and game_active:
+            if randint(0,2):
+                obstacle_rect_list.append(snail_surf.get_rect(midbottom=(randint(900,1100),300)))
+            else:
+                obstacle_rect_list.append(fly_surf.get_rect(midbottom=(randint(900,1100),210)))
+
 
     if game_active:
         # Pour mettre une surface sur une autre surface
@@ -77,9 +114,9 @@ while True:
         # screen.blit(score_surf,score_rect)
         score = display_score()
 
-        snail_rect.x -= 4
-        if snail_rect.right <= 0: snail_rect.left = 800
-        screen.blit(snail_surf,snail_rect)
+        # snail_rect.x -= 4
+        # if snail_rect.right <= 0: snail_rect.left = 800
+        # screen.blit(snail_surf,snail_rect)
 
         # Player
         player_gravity += 1
@@ -87,12 +124,19 @@ while True:
         if player_rect.bottom >= 300: player_rect.bottom = 300
         screen.blit(player_surf,player_rect)
 
+        # Obstacle movement
+
+        obstacle_rect_list  = obstacle_mouvement(obstacle_rect_list)
+
         # collision
-        if snail_rect.colliderect(player_rect):
-            game_active = False
+        game_active = collisions(player_rect,obstacle_rect_list)
+
     else:
         screen.fill((94,129,162))
         screen.blit(player_stand,player_stand_rect)
+        obstacle_rect_list.clear()
+        player_rect.midbottom = (80,300)
+        palyer_gravity = 0
         score_message = test_font.render(f"Score: {score}", False, (111,196,169))
         score_message_rect = score_message.get_rect(center=(400,330))
         screen.blit(game_title,game_title_rect)
